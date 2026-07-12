@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+echo "== delete stack for s3 bucket via CFN"
+
+# Check bucket name
+if [ -z "$1" ]; then
+    echo "There needs to be a stack name"
+    exit 1
+fi
+
+STACK_NAME=$1
+
+aws cloudformation delete-stack \
+--stack-name $STACK_NAME \
+--region ap-southeast-1
