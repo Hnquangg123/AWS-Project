@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+echo "== delete objects"
+
+# Check bucket name
+if [ -z "$1" ]; then
+    echo "There needs to be a object name eg. ./bucket my-object-name"
+    exit 1
+fi
+
+BUCKET_NAME=$1
+
+aws s3api list-objects-v2 \
+--bucket $BUCKET_NAME \
+--query Contents[].Key \
+| jq -n '{Objects: [inputs | .[] | {Key: .}]}' > /tmp/delete_objects.json
+
+aws s3api delete-objects --bucket $BUCKET_NAME --delete file://${TEMP_PATH}delete_objects.json
